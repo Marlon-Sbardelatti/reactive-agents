@@ -20,6 +20,7 @@ def main():
 
         grid = get_updated_grid(agent, grid_size)
         trace(agent, grid)
+        render_obstacles(agent, grid)
         print_grid(grid)
 
     print("Objetivo concluído!!! :)")
@@ -38,8 +39,8 @@ def generate_obstacles(grid_size: int) -> List[Tuple]:
     obstacles_length = randint(1, (pow(grid_size, 2) // 2))
 
     for _ in range(obstacles_length):
-        x = randint(0, grid_size)
-        y = randint(0, grid_size)
+        x = randint(0, grid_size - 1)
+        y = randint(0, grid_size - 1)
         obstacles.append((x, y))
 
     return obstacles
@@ -52,6 +53,11 @@ def trace(agent: SimpleAgent, grid):
             grid[m[1]][m[0]] = 3
 
 
+def render_obstacles(agent: SimpleAgent, grid):
+    for m in agent.obstacles:
+        grid[m[1]][m[0]] = 5
+
+
 def define_type(clmn: int, row: int, agent: SimpleAgent) -> int:
     if clmn == agent.position[0] and row == agent.position[1]:
         return 1
@@ -62,7 +68,7 @@ def define_type(clmn: int, row: int, agent: SimpleAgent) -> int:
 def print_grid(grid):
     for row in grid:
         for element in row:
-            print(element, end="")
+            print(f"{element:4}", end="")
         print()
 
     print("-----------------------------------------------------------", end="\n\n")

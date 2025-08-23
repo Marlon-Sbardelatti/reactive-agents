@@ -9,7 +9,7 @@ class SimpleAgent:
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.memory = []
-        self.obstacles = []
+        self.obstacles = obstacles
 
     def calculate_initial_position(self) -> Tuple:
         x = randint(0, self.limit)
@@ -20,7 +20,7 @@ class SimpleAgent:
         new_position = self.get_next_position()
         count = 0
 
-        while self.will_collide() or new_position in self.memory:
+        while self.will_collide() or new_position in self.memory or new_position in self.obstacles:
             if count >= 4:
                 self.position = (-1, -1)
                 return
