@@ -3,24 +3,39 @@ from random import randint
 
 
 class SimpleAgent:
-    def __init__(self, grid_size: int, obstacles: List[Tuple]) -> None:
+    def __init__(self, grid_size: int) -> None:
         self.limit = grid_size - 1
         self.position = self.calculate_initial_position()
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.memory = []
-        self.obstacles = obstacles
+        self.target = self.calculate_targe_position()
 
     def calculate_initial_position(self) -> Tuple:
         x = randint(0, self.limit)
         y = randint(0, self.limit)
         return (x, y)
 
+    def calculate_targe_position(self) -> Tuple:
+        x = randint(0, self.limit)
+        y = randint(0, self.limit)
+
+        while self.position == (x, y):
+            x = randint(0, self.limit)
+            y = randint(0, self.limit)
+
+        return (x, y)
+
     def move(self):
         new_position = self.get_next_position()
         count = 0
 
-        while self.will_collide() or new_position in self.memory or new_position in self.obstacles:
+        if self.position == self.target:
+            self.position = (-1, -1)
+            print("ACHOU")
+            return
+
+        while self.will_collide() or new_position in self.memory:
             if count >= 4:
                 self.position = (-1, -1)
                 return
