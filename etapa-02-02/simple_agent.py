@@ -1,14 +1,15 @@
-from typing import Tuple
+from typing import List, Tuple
 from random import randint
 
 
 class SimpleAgent:
-    def __init__(self, grid_size: int) -> None:
+    def __init__(self, grid_size: int, obstacles: List[Tuple]) -> None:
         self.limit = grid_size - 1
         self.position = self.calculate_initial_position()
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.memory = []
+        self.obstacles = []
 
     def calculate_initial_position(self) -> Tuple:
         x = randint(0, self.limit)
@@ -16,25 +17,23 @@ class SimpleAgent:
         return (x, y)
 
     def move(self):
-        while self.will_collide():
-            if self.verify_goal_completed():
-                self.position = (-1, -1)  # flag de objetivo completo
-                break
+        new_position = self.get_next_position()
+        count = 0
+
+        while self.will_collide() or new_position in self.memory:
+            if count >= 4:
+                self.position = (-1, -1)
+                return
 
             self.rotate()
+            count += 1
+            new_position = self.get_next_position()
 
-        if self.position != (-1, -1):
-            new_position = self.position = tuple(
-                (a + b) for a, b in zip(self.position, self.calculate_move())
-            )
-            print(new_position)
+        self.position = self.get_next_position()
+        self.memory.append(self.position)
 
-            if self.check_free_space(new_position):
-                self.memory.append(new_position)
-            else:
-                self.rotate()
-
-        print("fui para:", self.position, "direcao:", self.directions[0])
+    def get_next_position(self) -> Tuple:
+        return tuple((a + b) for a, b in zip(self.position, self.calculate_move()))
 
     def verify_goal_completed(self) -> bool:
         if self.directions[0] not in self.collided_walls:
@@ -54,9 +53,6 @@ class SimpleAgent:
                 return (-1, 0)
             case _:
                 return (0, 0)
-
-    def check_free_space(self, position: Tuple) -> bool:
-        return position not in self.memory
 
     def rotate(self):
         direction = self.directions.pop(0)

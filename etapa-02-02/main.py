@@ -1,4 +1,5 @@
-from typing import Tuple
+from random import randint
+from typing import List, Tuple
 from simple_agent import SimpleAgent
 import time
 
@@ -8,11 +9,12 @@ def main():
 
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
 
-    agent = SimpleAgent(grid_size)
+    obstacles = generate_obstacles(grid_size)
+
+    agent = SimpleAgent(grid_size, obstacles)
 
     while agent.position != (-1, -1):
         print(agent.position)
-        print(agent.collided_walls)
         agent.move()
         time.sleep(1)
 
@@ -28,6 +30,19 @@ def get_updated_grid(agent: SimpleAgent, grid_size: int):
         [define_type(clmn, row, agent) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
+
+
+def generate_obstacles(grid_size: int) -> List[Tuple]:
+    obstacles = []
+
+    obstacles_length = randint(1, (pow(grid_size, 2) // 2))
+
+    for _ in range(obstacles_length):
+        x = randint(0, grid_size)
+        y = randint(0, grid_size)
+        obstacles.append((x, y))
+
+    return obstacles
 
 
 def trace(agent: SimpleAgent, grid):
@@ -47,7 +62,7 @@ def define_type(clmn: int, row: int, agent: SimpleAgent) -> int:
 def print_grid(grid):
     for row in grid:
         for element in row:
-            print(f"{element:4}", end="")
+            print(element, end="")
         print()
 
     print("-----------------------------------------------------------", end="\n\n")
