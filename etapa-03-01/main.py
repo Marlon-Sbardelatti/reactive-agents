@@ -1,5 +1,3 @@
-from random import randint
-from typing import List, Tuple
 from simple_agent import SimpleAgent
 import time
 
@@ -7,7 +5,7 @@ import time
 def main():
     grid_size = int(input("Defina n para o grid n x n: "))
 
-    grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
+    grid = [[_ for _ in range(grid_size)] for _ in range(grid_size)]
 
     agent = SimpleAgent(grid_size)
 
@@ -33,16 +31,16 @@ def get_updated_grid(agent: SimpleAgent, grid_size: int):
 def trace(agent: SimpleAgent, grid):
     for m in agent.memory:
         if agent.position != m:
-            grid[m[1]][m[0]] = 3 # Caminho do Player
+            grid[m[1]][m[0]] = 3  # Caminho do Player
 
 
 def define_type(clmn: int, row: int, agent: SimpleAgent) -> int:
     if clmn == agent.position[0] and row == agent.position[1]:
-        return 1 # Player
+        return 1  # Player
     elif clmn == agent.target[0] and row == agent.target[1]:
-        return 4 # Alvo
+        return 4  # Alvo
     else:
-        return 0 # Espaço vazio
+        return 0  # Espaço vazio
 
 
 def print_grid(grid):

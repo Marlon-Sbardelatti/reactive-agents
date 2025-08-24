@@ -2,7 +2,7 @@ from typing import List, Tuple
 from random import randint
 
 
-class SimpleAgent:
+class ModelBasedAgent:
     def __init__(self, grid_size: int, obstacles: List[Tuple]) -> None:
         self.limit = grid_size - 1
         self.position = self.calculate_initial_position()
@@ -20,7 +20,11 @@ class SimpleAgent:
         new_position = self.get_next_position()
         count = 0
 
-        while self.will_collide() or new_position in self.memory or new_position in self.obstacles:
+        while (
+            self.will_collide()
+            or new_position in self.memory
+            or new_position in self.obstacles
+        ):
             if count >= 4:
                 self.position = (-1, -1)
                 return

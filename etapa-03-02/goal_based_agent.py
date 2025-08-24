@@ -2,46 +2,51 @@ from typing import List, Tuple
 from random import randint
 
 
-class SimpleAgent:
-    def __init__(self, grid_size: int) -> None:
+class GoalBasedAgent:
+    def __init__(self, grid_size: int, obstacles: List[Tuple]) -> None:
         self.limit = grid_size - 1
-        self.position = self.calculate_initial_position()
         self.directions = ["N", "L", "S", "O"]
-        self.collided_walls = []
         self.memory = []
-        self.target = self.calculate_target_position()
+        self.obstacles = obstacles
+        self.is_stuck = False
+        self.goal_completed = False
 
-    def calculate_initial_position(self) -> Tuple:
+        self.set_positions()
+
+    def set_positions(self): 
+        self.position = self.create_random_position()
+
+        target = self.create_random_position()
+        while target == self.position:
+            target = self.create_random_position()
+
+        self.target = target
+
+
+    def create_random_position(self) -> Tuple:
         x = randint(0, self.limit)
         y = randint(0, self.limit)
-        return (x, y)
-
-    def calculate_target_position(self) -> Tuple:
-        x = randint(0, self.limit)
-        y = randint(0, self.limit)
-
-        while self.position == (x, y):
-            x = randint(0, self.limit)
-            y = randint(0, self.limit)
-
         return (x, y)
 
     def move(self):
         new_position = self.get_next_position()
-        count = 0
+        rotations_made = 0
 
         if self.position == self.target:
-            self.position = (-1, -1)
-            print("ACHOU")
+            self.goal_completed = True
             return
 
-        while self.will_collide() or new_position in self.memory:
-            if count >= 4:
-                self.position = (-1, -1)
+        while (
+            self.will_collide()
+            or new_position in self.memory
+            or new_position in self.obstacles
+        ):
+            if rotations_made >= 4:
+                self.is_stuck = True
                 return
 
             self.rotate()
-            count += 1
+            rotations_made += 1
             new_position = self.get_next_position()
 
         self.position = self.get_next_position()
@@ -50,11 +55,12 @@ class SimpleAgent:
     def get_next_position(self) -> Tuple:
         return tuple((a + b) for a, b in zip(self.position, self.calculate_move()))
 
-    def verify_goal_completed(self) -> bool:
-        if self.directions[0] not in self.collided_walls:
-            self.collided_walls.append(self.directions[0])
+    def has_finished(self) -> bool:
+        return self.is_stuck or self.goal_completed
 
-        return len(self.collided_walls) == 4
+    def rotate(self):
+        direction = self.directions.pop(0)
+        self.directions.append(direction)
 
     def calculate_move(self) -> Tuple:
         match self.directions[0]:
@@ -69,10 +75,6 @@ class SimpleAgent:
             case _:
                 return (0, 0)
 
-    def rotate(self):
-        direction = self.directions.pop(0)
-        self.directions.append(direction)
-
     def will_collide(self) -> bool:
         match self.directions[0]:
             case "N":
@@ -85,3 +87,11 @@ class SimpleAgent:
                 return self.position[0] == 0
             case _:
                 return False
+
+    def get_results(self) -> str:
+        result = "Sim" if self.goal_completed else "Não"
+        return f"""
+FIM DE JOGO!
+Destino alcançado: {result}
+Comprimento do caminho: {len(self.memory) - 1}
+        """
