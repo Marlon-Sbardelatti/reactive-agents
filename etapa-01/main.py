@@ -4,41 +4,57 @@ import time
 
 
 def main():
-    grid_size = int(input("Defina n para o grid n x n: "))
+    grid_size = int(input("Escolha o tamanho do tabuleiro: "))
 
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
 
     agent = SimpleAgent(grid_size)
 
-    while agent.position != (-1, -1):
-        print(agent.position)
-        print(agent.collided_walls)
+    while not agent.goal_completed:
         agent.move()
         time.sleep(1)
 
-        grid = get_updated_grid(agent.position, grid_size)
+        grid = get_updated_grid(agent, grid_size)
         print_grid(grid)
 
-    print("Objetivo concluído!!! :)")
+    print(agent.get_results())
 
 
-def get_updated_grid(position: Tuple, grid_size: int):
+def get_updated_grid(agent: SimpleAgent, grid_size: int):
     return [
-        [
-            1 if clmn == position[0] and row == position[1] else 0
-            for clmn in range(grid_size)
-        ]
+        [get_cell_value(row, clmn, agent) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
 
 
-def print_grid(grid):
-    for row in grid:
-        for element in row:
-            print(f"{element:4}", end="")
-        print()
+def get_cell_value(row: int, clmn: int, agent: SimpleAgent) -> str:
+    def same_position(cell: Tuple, position: Tuple):
+        return cell == position
 
-    print("-----------------------------------------------------------", end="\n\n")
+    current_cell = (row, clmn)
+
+    if same_position(current_cell, agent.position):
+        return "♟"  # Player
+    else:
+        return " "
+
+
+def print_grid(grid):
+    rows = len(grid)
+    cols = len(grid[0])
+
+    print("   " + "   ".join(str(c) for c in range(cols)))
+    print("  +" + "---+" * cols)
+
+    for r in range(rows):
+        row_str = f"{r} |"
+        for c in range(cols):
+            row_str += f" {grid[r][c]} |"
+        print(row_str)
+
+        print("  +" + "---+" * cols)
+
+    print("")
 
 
 if __name__ == "__main__":

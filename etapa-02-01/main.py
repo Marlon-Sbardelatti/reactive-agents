@@ -1,56 +1,70 @@
+from random import randint
 from typing import Tuple
 from simple_agent import SimpleAgent
 import time
 
 
 def main():
-    grid_size = int(input("Defina n para o grid n x n: "))
+    grid_size = int(input("Escolha o tamanho do tabuleiro: "))
 
-    grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
+    grid = [[_ for _ in range(grid_size)] for _ in range(grid_size)]
 
-    agent = SimpleAgent(grid_size)
+    initial_position = create_random_position(grid_size)
+    agent = SimpleAgent(grid_size, initial_position)
 
-    while agent.position != (-1, -1):
-        print(agent.position)
+    while not agent.has_finished():
         agent.move()
         time.sleep(1)
 
         grid = get_updated_grid(agent, grid_size)
-        trace(agent, grid)
         print_grid(grid)
+    print(agent.get_results())
 
-    print("Objetivo concluído!!! :)")
+
+def create_random_position(grid_size) -> Tuple:
+    x = randint(0, grid_size - 1)
+    y = randint(0, grid_size - 1)
+    return (x, y)
 
 
 def get_updated_grid(agent: SimpleAgent, grid_size: int):
     return [
-        [define_type(clmn, row, agent) for clmn in range(grid_size)]
+        [get_cell_value(row, clmn, agent) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
 
+def get_cell_value(row: int, clmn: int, agent: SimpleAgent) -> str:
+    def same_position(cell: Tuple, position: Tuple):
+        return cell == position
 
-def trace(agent: SimpleAgent, grid):
-    for m in agent.memory:
-        # print("agent position: ", agent.position, "m: ", m)
-        if agent.position != m:
-            grid[m[1]][m[0]] = 3
+    current_cell = (row, clmn)
 
-
-def define_type(clmn: int, row: int, agent: SimpleAgent) -> int:
-    if clmn == agent.position[0] and row == agent.position[1]:
-        return 1
+    if same_position(current_cell, agent.position):
+        return "♟"  # Player
+    elif current_cell in agent.memory and not same_position(
+        current_cell, agent.position
+    ):
+        return "▪"  # Caminho
     else:
-        return 0
+        return " "  # Espaço vazio
 
 
 def print_grid(grid):
-    for row in grid:
-        for element in row:
-            print(f"{element:4}", end="")
-        print()
+    rows = len(grid)
+    cols = len(grid[0])
 
-    print("-----------------------------------------------------------", end="\n\n")
+    print("   " + "   ".join(str(c) for c in range(cols)))
+    print("  +" + "---+" * cols)
 
+    for r in range(rows):
+        row_str = f"{r} |"
+        for c in range(cols):
+            row_str += f" {grid[r][c]} |"
+        print(row_str)
+
+        print("  +" + "---+" * cols)
+
+    print("")
 
 if __name__ == "__main__":
     main()

@@ -13,15 +13,14 @@ def main():
 
     agent = ModelBasedAgent(grid_size, obstacles)
 
-    while agent.position != (-1, -1):
-        print(agent.position)
+    while not agent.has_finished():
         agent.move()
         time.sleep(1)
 
         grid = get_updated_grid(agent, grid_size)
         print_grid(grid)
 
-    print("Objetivo concluído!!! :)")
+    print(agent.get_results())
 
 
 def get_updated_grid(agent: ModelBasedAgent, grid_size: int):

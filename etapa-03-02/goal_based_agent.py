@@ -13,7 +13,7 @@ class GoalBasedAgent:
 
         self.set_positions()
 
-    def set_positions(self): 
+    def set_positions(self):
         self.position = self.create_random_position()
 
         target = self.create_random_position()
@@ -22,19 +22,18 @@ class GoalBasedAgent:
 
         self.target = target
 
-
     def create_random_position(self) -> Tuple:
         x = randint(0, self.limit)
         y = randint(0, self.limit)
         return (x, y)
 
     def move(self):
-        new_position = self.get_next_position()
-        rotations_made = 0
-
         if self.position == self.target:
             self.goal_completed = True
             return
+
+        new_position = self.get_next_position()
+        rotations_made = 0
 
         while (
             self.will_collide()
@@ -49,7 +48,7 @@ class GoalBasedAgent:
             rotations_made += 1
             new_position = self.get_next_position()
 
-        self.position = self.get_next_position()
+        self.position = new_position
         self.memory.append(self.position)
 
     def get_next_position(self) -> Tuple:
@@ -63,6 +62,16 @@ class GoalBasedAgent:
         self.directions.append(direction)
 
     def calculate_move(self) -> Tuple:
+        # if self.position[0] < self.target[0]:
+        #     return (1, 0)
+        # elif self.position[0] > self.target[0]:
+        #     return (-1, 0)
+        # elif self.position[1] < self.target[1]:
+        #     return (0, 1)
+        # elif self.position[1] > self.target[1]:
+        #     return (0, 1)
+
+        # return (0, 0)
         match self.directions[0]:
             case "N":
                 return (0, -1)

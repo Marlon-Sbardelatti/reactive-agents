@@ -8,6 +8,7 @@ class SimpleAgent:
         self.position = self.calculate_initial_position()
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
+        self.goal_completed = False
 
     def calculate_initial_position(self) -> Tuple:
         x = randint(0, self.limit)
@@ -15,19 +16,23 @@ class SimpleAgent:
         return (x, y)
 
     def move(self):
+        rotations_made = 0
+
         while self.will_collide():
             if self.verify_goal_completed():
-                self.position = (-1, -1)  # flag de objetivo completo
+                self.goal_completed = True
                 break
 
             self.rotate()
+            rotations_made += 1
 
-        if self.position != (-1, -1):
-            self.position = tuple(
-                (a + b) for a, b in zip(self.position, self.calculate_move())
-            )
+        if rotations_made >= 4:
+            return
 
-        print("fui para:", self.position, "direcao:", self.directions[0])
+        self.position = tuple(
+            (a + b) for a, b in zip(self.position, self.calculate_move())
+        )
+
 
     def verify_goal_completed(self) -> bool:
         if self.directions[0] not in self.collided_walls:
@@ -64,3 +69,11 @@ class SimpleAgent:
                 return self.position[0] == 0
             case _:
                 return False
+
+    def get_results(self) -> str:
+        result = "Sim" if self.goal_completed else "Não"
+
+        return f"""
+FIM DE JOGO!
+Destino alcançado: {result}
+            """

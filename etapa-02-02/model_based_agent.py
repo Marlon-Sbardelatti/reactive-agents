@@ -10,6 +10,8 @@ class ModelBasedAgent:
         self.collided_walls = []
         self.memory = []
         self.obstacles = obstacles
+        self.goal_completed = False
+        self.is_stuck = False
 
     def calculate_initial_position(self) -> Tuple:
         x = randint(0, self.limit)
@@ -18,19 +20,19 @@ class ModelBasedAgent:
 
     def move(self):
         new_position = self.get_next_position()
-        count = 0
+        rotations_made = 0
 
         while (
             self.will_collide()
             or new_position in self.memory
             or new_position in self.obstacles
         ):
-            if count >= 4:
-                self.position = (-1, -1)
+            if rotations_made >= 4:
+                self.is_stuck = True
                 return
 
             self.rotate()
-            count += 1
+            rotations_made += 1
             new_position = self.get_next_position()
 
         self.position = self.get_next_position()
@@ -74,3 +76,18 @@ class ModelBasedAgent:
                 return self.position[0] == 0
             case _:
                 return False
+
+    def has_finished(self) -> bool:
+        return self.is_stuck or self.goal_completed
+
+    def get_results(self) -> str:
+        total_visitadas = len(self.memory)
+        total_casas = pow(self.limit + 1, 2) - len(self.obstacles)
+        percentual = (total_visitadas / total_casas) * 100
+        if percentual == 100.00:
+            self.goal_completed = True
+        return f"""
+FIM DE JOGO!
+Objetivo concluido: {self.goal_completed}
+Percentual visitado: {percentual:.2f}%
+        """
