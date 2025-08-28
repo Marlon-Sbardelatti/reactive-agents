@@ -35,7 +35,7 @@ class ModelBasedAgent:
             rotations_made += 1
             new_position = self.get_next_position()
 
-        self.position = self.get_next_position()
+        self.position = new_position
         self.memory.append(self.position)
 
     def get_next_position(self) -> Tuple:

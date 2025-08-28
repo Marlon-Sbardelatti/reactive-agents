@@ -60,28 +60,28 @@ class SimpleAgent:
         return len(self.collided_walls) == 4
 
     def calculate_move(self) -> Tuple:
-        # if self.position[0] < self.target[0]:
-        #     return (1, 0)
-        # elif self.position[0] > self.target[0]:
-        #     return (-1, 0)
-        # elif self.position[1] < self.target[1]:
-        #     return (0, 1)
-        # elif self.position[1] > self.target[1]:
-        #     return (0, 1)
+        if self.position[0] < self.target[0]:
+            return (1, 0)
+        elif self.position[0] > self.target[0]:
+            return (-1, 0)
+        elif self.position[1] < self.target[1]:
+            return (0, 1)
+        elif self.position[1] > self.target[1]:
+            return (0, -1)
 
-        # return (0, 0)
+        return (0, 0)
 
-        match self.directions[0]:
-            case "N":
-                return (0, -1)
-            case "S":
-                return (0, 1)
-            case "L":
-                return (1, 0)
-            case "O":
-                return (-1, 0)
-            case _:
-                return (0, 0)
+        # match self.directions[0]:
+        #     case "N":
+        #         return (0, -1)
+        #     case "S":
+        #         return (0, 1)
+        #     case "L":
+        #         return (1, 0)
+        #     case "O":
+        #         return (-1, 0)
+        #     case _:
+        #         return (0, 0)
 
     def rotate(self):
         direction = self.directions.pop(0)
