@@ -6,19 +6,27 @@ from random import randint
 
 
 def main():
-    grid_size = int(input("Escolha o tamanho do tabuleiro: "))
-
+    is_default = int(input("Opções de mapa de obstáculos\n1 - Padrão\n2 - Aleatório\nEscolha: "))
+    
+    if is_default == 1:
+        grid_size = 10
+        grid_weights = generate_default_cell_weights()
+        initial_position = (0, 5)
+        target = (9, 5)
+        
+    else:
+        grid_size = int(input("Escolha o tamanho do tabuleiro: "))
+        grid_weights = generate_random_cell_weights(grid_size)
+        initial_position = generate_random_position(grid_size)
+        target = generate_random_position(grid_size)
+        
+        while target == initial_position:
+            target = generate_random_position(grid_size)
+    
+        grid_weights[initial_position[0]][initial_position[1]] = 0
+        grid_weights[target[0]][target[1]] = 0
+        
     grid = [[_ for _ in range(grid_size)] for _ in range(grid_size)]
-    grid_weights = create_cell_weights(grid_size)
-
-    initial_position = create_random_position(grid_size)
-    target = create_random_position(grid_size)
-
-    while target == initial_position:
-        target = create_random_position(grid_size)
-
-    grid_weights[initial_position[0]][initial_position[1]] = 0
-    grid_weights[target[0]][target[1]] = 0
 
     agent = UtilityBasedAgent(grid_size, grid_weights, initial_position)
     agent.set_target(target)
@@ -38,9 +46,25 @@ def get_updated_grid(agent: UtilityBasedAgent, grid_size: int, grid_weights: Lis
         [get_cell_value(row, clmn, agent, grid_weights) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
+    
+    
+def generate_default_cell_weights():
+    return [
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 3, 1, 1, 1, 1],
+        [1, 1, 2, 2, 1, 3, 3, 2, 1, 1],
+        [1, 1, 2, 1, 3, 3, 3, 2, 1, 1],
+        [1, 1, 2, 2, 3, 3, 3, 2, 2, 1],
+        [1, 1, 1, 2, 3, 1, 2, 2, 1, 1],
+        [1, 1, 1, 1, 2, 3, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+    ]
 
 
-def create_cell_weights(grid_size):
+def generate_random_cell_weights(grid_size):
     # Células normais (1)
     weights = [[1 for _ in range(grid_size)] for _ in range(grid_size)]
 
@@ -66,7 +90,7 @@ def create_cell_weights(grid_size):
     return weights
 
 
-def create_random_position(grid_size) -> Tuple:
+def generate_random_position(grid_size) -> Tuple:
     x = randint(0, grid_size - 1)
     y = randint(0, grid_size - 1)
     return (x, y)

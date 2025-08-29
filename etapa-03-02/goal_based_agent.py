@@ -69,9 +69,10 @@ class GoalBasedAgent:
         # elif self.position[1] < self.target[1]:
         #     return (0, 1)
         # elif self.position[1] > self.target[1]:
-        #     return (0, 1)
+        #     return (0, -1)
 
         # return (0, 0)
+        
         match self.directions[0]:
             case "N":
                 return (0, -1)
