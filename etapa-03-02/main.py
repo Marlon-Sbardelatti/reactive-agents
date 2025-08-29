@@ -10,14 +10,23 @@ def main():
     if is_default == 1:
         obstacles = generate_default_obstacles()
         grid_size = 10
+        initial_position = (0, 0)
+        target = (7, 7)
         
     else:
         grid_size = int(input("Escolha o tamanho do tabuleiro: "))
         obstacles = generate_random_obstacles(grid_size)
 
+        initial_position = generate_random_position(grid_size)
+        target = generate_random_position(grid_size)
+
+        while target == initial_position:
+            target = generate_random_position(grid_size)
+
     grid = [[_ for _ in range(grid_size)] for _ in range(grid_size)]
 
-    agent = GoalBasedAgent(grid_size, obstacles)
+    agent = GoalBasedAgent(grid_size, initial_position, obstacles)
+    agent.set_target(target)
 
     while not agent.has_finished():
         agent.move()
@@ -34,7 +43,7 @@ def get_updated_grid(agent: GoalBasedAgent, grid_size: int):
         [get_cell_value(clmn, row, agent) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
-    
+
 
 def generate_default_obstacles() -> List[Tuple]:
     return [
@@ -50,6 +59,7 @@ def generate_default_obstacles() -> List[Tuple]:
         (5, 9)
     ]
 
+
 def generate_random_obstacles(grid_size: int) -> List[Tuple]:
     obstacles = []
 
@@ -61,6 +71,12 @@ def generate_random_obstacles(grid_size: int) -> List[Tuple]:
         obstacles.append((x, y))
 
     return obstacles
+
+
+def generate_random_position(grid_size) -> Tuple:
+    x = randint(0, grid_size - 1)
+    y = randint(0, grid_size - 1)
+    return (x, y)
 
 
 def get_cell_value(clmn: int, row: int, agent: GoalBasedAgent) -> str:

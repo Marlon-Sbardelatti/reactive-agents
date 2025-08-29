@@ -16,7 +16,7 @@ def main():
 
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
    
-    agent = ModelBasedAgent(grid_size, obstacles)
+    agent = ModelBasedAgent(grid_size, generate_random_position(grid_size), obstacles)
 
     while not agent.has_finished():
         agent.move()
@@ -61,6 +61,12 @@ def generate_random_obstacles(grid_size: int) -> List[Tuple]:
         obstacles.append((x, y))
 
     return obstacles
+
+
+def generate_random_position(grid_size) -> Tuple:
+    x = randint(0, grid_size - 1)
+    y = randint(0, grid_size - 1)
+    return (x, y)
 
 
 def get_cell_value(clmn: int, row: int, agent: ModelBasedAgent) -> str:

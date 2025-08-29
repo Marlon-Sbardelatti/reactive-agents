@@ -8,7 +8,7 @@ def main():
 
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
 
-    agent = SimpleAgent(grid_size)
+    agent = SimpleAgent(grid_size, generate_random_position(grid_size))
 
     while not agent.goal_completed:
         agent.move()
@@ -25,6 +25,12 @@ def get_updated_grid(agent: SimpleAgent, grid_size: int):
         [get_cell_value(row, clmn, agent) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
+
+
+def generate_random_position(grid_size) -> Tuple:
+    x = randint(0, grid_size - 1)
+    y = randint(0, grid_size - 1)
+    return (x, y)
 
 
 def get_cell_value(row: int, clmn: int, agent: SimpleAgent) -> str:

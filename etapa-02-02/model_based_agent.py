@@ -3,20 +3,15 @@ from random import randint
 
 
 class ModelBasedAgent:
-    def __init__(self, grid_size: int, obstacles: List[Tuple]) -> None:
+    def __init__(self, grid_size: int, initial_position: Tuple, obstacles: List[Tuple]) -> None:
         self.limit = grid_size - 1
-        self.position = self.calculate_initial_position()
+        self.position = initial_position
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.memory = []
         self.obstacles = obstacles
         self.goal_completed = False
         self.is_stuck = False
-
-    def calculate_initial_position(self) -> Tuple:
-        x = randint(0, self.limit)
-        y = randint(0, self.limit)
-        return (x, y)
 
     def move(self):
         new_position = self.get_next_position()

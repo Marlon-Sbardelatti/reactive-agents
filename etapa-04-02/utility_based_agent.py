@@ -2,9 +2,9 @@ from typing import List, Tuple
 
 
 class UtilityBasedAgent:
-    def __init__(self, grid_size: int, grid_weights: List, position: Tuple) -> None:
+    def __init__(self, grid_size: int, grid_weights: List, initial_position: Tuple) -> None:
         self.limit = grid_size - 1
-        self.position = position
+        self.position = initial_position
         self.directions = ["N", "L", "S", "O"]
         self.memory = [position]
         self.is_stuck = False
