@@ -2,10 +2,10 @@ from typing import List, Tuple
 
 
 class SimpleAgent:
-    def __init__(self, grid_size: int, position: Tuple) -> None:
+    def __init__(self, grid_size: int, initial_position: Tuple) -> None:
         self.limit = grid_size - 1
-        self.position = position
-        self.memory = [position]
+        self.position = initial_position
+        self.memory = [initial_position]
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.is_stuck = False

@@ -1,19 +1,13 @@
 from typing import Tuple
-from random import randint
 
 
 class SimpleAgent:
-    def __init__(self, grid_size: int) -> None:
+    def __init__(self, grid_size: int, initial_position: Tuple) -> None:
         self.limit = grid_size - 1
-        self.position = self.calculate_initial_position()
+        self.position = initial_position
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.goal_completed = False
-
-    def calculate_initial_position(self) -> Tuple:
-        x = randint(0, self.limit)
-        y = randint(0, self.limit)
-        return (x, y)
 
     def move(self):
         rotations_made = 0
@@ -32,7 +26,6 @@ class SimpleAgent:
         self.position = tuple(
             (a + b) for a, b in zip(self.position, self.calculate_move())
         )
-
 
     def verify_goal_completed(self) -> bool:
         if self.directions[0] not in self.collided_walls:

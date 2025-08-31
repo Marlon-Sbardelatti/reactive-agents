@@ -1,31 +1,18 @@
-from typing import List, Tuple
-from random import randint
+from typing import Tuple
 
 
 class SimpleAgent:
-    def __init__(self, grid_size: int) -> None:
+    def __init__(self, grid_size: int, initial_position: Tuple) -> None:
         self.limit = grid_size - 1
+        self.position = initial_position
         self.directions = ["N", "L", "S", "O"]
         self.collided_walls = []
         self.memory = []
         self.goal_completed = False
         self.is_stuck = False
 
-        self.set_positions()
-
-    def set_positions(self):
-        self.position = self.create_random_position()
-
-        target = self.create_random_position()
-        while target == self.position:
-            target = self.create_random_position()
-
-        self.target = target
-
-    def create_random_position(self) -> Tuple:
-        x = randint(0, self.limit)
-        y = randint(0, self.limit)
-        return (x, y)
+    def set_target(self, position: Tuple):
+        self.target = position
 
     def move(self):
         if self.position == self.target:
