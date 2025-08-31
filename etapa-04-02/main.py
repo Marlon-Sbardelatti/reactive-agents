@@ -1,30 +1,33 @@
 from utility_based_agent import UtilityBasedAgent
+from termcolor import colored
 from typing import List, Tuple
 from random import randint, shuffle
 import time
 
 
 def main():
-    is_default = int(input("Opções de mapa de obstáculos\n1 - Padrão\n2 - Aleatório\nEscolha: "))
-    
+    is_default = int(
+        input("Opções de mapa de obstáculos\n1 - Padrão\n2 - Aleatório\nEscolha: ")
+    )
+
     if is_default == 1:
         grid_size = 10
         grid_weights = generate_default_cell_weights()
         initial_position = (0, 5)
         target = (9, 5)
-        
+
     else:
         grid_size = int(input("Escolha o tamanho do tabuleiro: "))
         grid_weights = generate_random_cell_weights(grid_size)
         initial_position = generate_random_position(grid_size)
         target = generate_random_position(grid_size)
-        
+
         while target == initial_position:
             target = generate_random_position(grid_size)
-    
+
         grid_weights[initial_position[0]][initial_position[1]] = 0
         grid_weights[target[0]][target[1]] = 0
-        
+
     grid = [[_ for _ in range(grid_size)] for _ in range(grid_size)]
 
     agent = UtilityBasedAgent(grid_size, grid_weights, initial_position)
@@ -45,8 +48,20 @@ def get_updated_grid(agent: UtilityBasedAgent, grid_size: int, grid_weights: Lis
         [get_cell_value(row, clmn, agent, grid_weights) for clmn in range(grid_size)]
         for row in range(grid_size)
     ]
-    
-    
+
+
+def get_weight_color(cell: int) -> str:
+    match cell:
+        case 1:
+            return "green"
+        case 2:
+            return "yellow"
+        case 3:
+            return "red"
+        case _:
+            return "white"
+
+
 def generate_default_cell_weights():
     return [
         [1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
@@ -59,7 +74,7 @@ def generate_default_cell_weights():
         [1, 1, 1, 1, 2, 3, 1, 1, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1],
     ]
 
 
@@ -112,7 +127,8 @@ def get_cell_value(
     ):
         return "▪"  # Caminho
     else:
-        return grid_weights[row][clmn]  # Espaço vazio
+        weight = grid_weights[row][clmn]
+        return colored(weight, get_weight_color(weight))
 
 
 def print_grid(grid):
@@ -135,4 +151,3 @@ def print_grid(grid):
 
 if __name__ == "__main__":
     main()
-

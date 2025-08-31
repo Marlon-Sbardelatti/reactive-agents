@@ -1,21 +1,28 @@
-from simple_agent import SimpleAgent
+from goal_based_agent import GoalBasedAgent
 from typing import Tuple
 from random import randint
 import time
 
 
 def main():
-    grid_size = int(input("Escolha o tamanho do tabuleiro: "))
-
-    grid = [[_ for _ in range(grid_size)] for _ in range(grid_size)]
-
-    initial_position = generate_random_position(grid_size)
-    target = generate_random_position(grid_size)
-
-    while target == initial_position:
+    is_default = int(input("Opções de mapa\n1 - Padrão\n2 - Aleatório\nEscolha: "))
+    
+    if is_default == 1:
+        grid_size = 10
+        initial_position = (0, 0)
+        target = (7,7)
+    else:
+        grid_size = int(input("Escolha o tamanho do tabuleiro: "))
+        
+        initial_position = generate_random_position(grid_size)
         target = generate_random_position(grid_size)
 
-    agent = SimpleAgent(grid_size, initial_position)
+        while target == initial_position:
+            target = generate_random_position(grid_size)
+
+    grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
+   
+    agent = GoalBasedAgent(grid_size, initial_position) 
     agent.set_target(target)
 
     while not agent.has_finished():
@@ -27,8 +34,7 @@ def main():
 
     print(agent.get_results())
 
-
-def get_updated_grid(agent: SimpleAgent, grid_size: int):
+def get_updated_grid(agent: GoalBasedAgent, grid_size: int):
     return [
         [get_cell_value(clmn, row, agent) for clmn in range(grid_size)]
         for row in range(grid_size)
@@ -41,7 +47,7 @@ def generate_random_position(grid_size) -> Tuple:
     return (x, y)
 
 
-def get_cell_value(row: int, clmn: int, agent: SimpleAgent) -> str:
+def get_cell_value(row: int, clmn: int, agent: GoalBasedAgent) -> str:
     def same_position(cell: Tuple, position: Tuple):
         return cell == position
 

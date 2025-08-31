@@ -11,7 +11,7 @@ def main():
         obstacles = generate_default_obstacles()
         grid_size = 10
     else:
-        grid_size = int(input("Defina n para o grid n x n: "))
+        grid_size = int(input("Escolha o tamanho do tabuleiro: "))
         obstacles = generate_random_obstacles(grid_size)
 
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]

@@ -2,16 +2,12 @@ from typing import List, Optional, Tuple
 
 
 class GoalBasedAgent:
-    def __init__(
-        self, grid_size: int, initial_position: Tuple, obstacles: List[Tuple]
-    ) -> None:
+    def __init__(self, grid_size: int, initial_position: Tuple) -> None:
         self.limit = grid_size - 1
         self.position = initial_position
         self.memory = [initial_position]
         self.visit_count = {initial_position: 1}
         self.directions = ["N", "L", "S", "O"]
-        self.obstacles = obstacles
-        self.is_stuck = False
         self.goal_completed = False
 
     def set_target(self, position: Tuple):
@@ -30,9 +26,6 @@ class GoalBasedAgent:
             revisitable_positions = self.get_available_positions(True)
             if revisitable_positions:
                 self.position = self.get_best_revisit(revisitable_positions)
-            else:
-                self.is_stuck = True
-                return
 
         if self.position not in self.memory:
             self.memory.append(self.position)
@@ -45,10 +38,8 @@ class GoalBasedAgent:
         rotations_made = 0
 
         while rotations_made < 4:
-            if (
-                not self.will_collide()
-                and new_position not in self.obstacles
-                and (revisit or new_position not in self.memory)
+            if not self.will_collide() and (
+                revisit or (new_position not in self.memory)
             ):
                 positions.append(new_position)
 
@@ -85,27 +76,27 @@ class GoalBasedAgent:
             (i, j)
             for i in range(self.limit + 1)
             for j in range(self.limit + 1)
-            if (i, j) not in self.memory and (i, j) not in self.obstacles
+            if (i, j) not in self.memory
         }
         if not unvisited:
             return 0
         return min(abs(x - ux) + abs(y - uy) for ux, uy in unvisited)
 
+
     def get_next_position(self) -> Tuple:
         return tuple((a + b) for a, b in zip(self.position, self.calculate_move()))
 
     def calculate_move(self) -> Tuple:
-        match self.directions[0]:
-            case "N":
-                return (0, -1)
-            case "S":
-                return (0, 1)
-            case "L":
-                return (1, 0)
-            case "O":
-                return (-1, 0)
-            case _:
-                return (0, 0)
+        if self.position[0] < self.target[0]:
+            return (1, 0)
+        elif self.position[0] > self.target[0]:
+            return (-1, 0)
+        elif self.position[1] < self.target[1]:
+            return (0, 1)
+        elif self.position[1] > self.target[1]:
+            return (0, -1)
+
+        return (0, 0)
 
     def rotate(self):
         direction = self.directions.pop(0)
@@ -125,19 +116,12 @@ class GoalBasedAgent:
                 return False
 
     def has_finished(self) -> bool:
-        return self.is_stuck or self.goal_completed
+        return self.goal_completed
 
     def get_results(self) -> str:
         result = "Sim" if self.goal_completed else "Não"
-        repeated_times = 0
-
-        for value in self.visit_count.values():
-            if value > 1:
-                repeated_times += value
-
         return f"""
 FIM DE JOGO!
 Destino alcançado: {result}
 Comprimento do caminho: {len(self.memory) - 1}
-Número de revisitas: {repeated_times}
         """
