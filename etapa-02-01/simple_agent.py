@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+
 class SimpleAgent:
     def __init__(self, grid_size: int, position: Tuple) -> None:
         self.limit = grid_size - 1
@@ -9,6 +10,8 @@ class SimpleAgent:
         self.collided_walls = []
         self.is_stuck = False
         self.goal_completed = False
+        self.was_at_border = False
+        self.reached_border = False
 
     def move(self):
         if len(self.memory) == pow(self.limit + 1, 2):
@@ -22,9 +25,12 @@ class SimpleAgent:
 
         while rotations_made < 4:
             if not (self.will_collide() or new_position in self.memory):
-                available_positions.append((
-                    new_position, tuple((a - b) for a, b in zip(self.position, new_position))
-                ))
+                available_positions.append(
+                    (
+                        new_position,
+                        tuple((a - b) for a, b in zip(self.position, new_position)),
+                    )
+                )
 
             self.rotate()
             new_position = self.get_next_position()
@@ -45,33 +51,36 @@ class SimpleAgent:
 
     def get_best_position(self, available_positions: List[Tuple]) -> Tuple:
         """
-            Retorna melhor posição vizinha disponível,
-            com base na menor distância até uma das bordas
+        Retorna melhor posição vizinha disponível,
+        com base na menor distância até uma das bordas
         """
-        if not self.at_border():
+        at_border = self.at_border()
+        if at_border and len( self.memory ) > 1:
+            return self.choose_zigzag_move(available_positions)
+        elif not self.reached_border:
             return min(
                 available_positions,
-                key=lambda position: self.distance_to_nearest_border(position[0])
+                key=lambda position: self.distance_to_nearest_border(position[0]),
             )[0]
-        return self.choose_zigzag_move(available_positions)
+        else:
+            return available_positions[0][0]
 
     def at_border(self) -> bool:
         """Verifica se o agente está em um dos extremos do grid"""
         x, y = self.position
-        return (
-            x == 0 or
-            y == 0 or
-            x == self.limit or
-            y == self.limit
-        )
+        at_border = x == 0 or y == 0 or x == self.limit or y == self.limit
+
+        return at_border
 
     def distance_to_nearest_border(self, position: Tuple) -> int:
+        print("distancia para a menor borda")
+        self.reached_border = True
         x, y = position
         return min(x, y, self.limit - x, self.limit - y)
 
     def choose_zigzag_move(self, available_positions):
+        print("zigzag")
         x, y = self.position
-        
 
         # Coluna par → desce
         if y % 2 == 0:
