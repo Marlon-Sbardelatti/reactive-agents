@@ -1,5 +1,4 @@
 from typing import List, Tuple
-from random import randint
 
 
 class ModelBasedAgent:

@@ -6,7 +6,7 @@ class UtilityBasedAgent:
         self.limit = grid_size - 1
         self.position = initial_position
         self.directions = ["N", "L", "S", "O"]
-        self.memory = [position]
+        self.memory = [initial_position]
         self.is_stuck = False
         self.goal_completed = False
         self.grid_weights = grid_weights

@@ -1,6 +1,6 @@
-from random import randint
-from typing import List, Tuple
 from model_based_agent import ModelBasedAgent
+from typing import List, Tuple
+from random import randint
 import time
 
 

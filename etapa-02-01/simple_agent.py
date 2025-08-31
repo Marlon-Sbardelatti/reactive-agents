@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+
 class SimpleAgent:
     def __init__(self, grid_size: int, initial_position: Tuple) -> None:
         self.limit = grid_size - 1

@@ -1,5 +1,4 @@
 from typing import Tuple
-from random import randint
 
 
 class SimpleAgent:

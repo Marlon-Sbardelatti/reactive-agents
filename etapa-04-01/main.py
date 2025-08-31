@@ -1,8 +1,7 @@
-from typing import List, Tuple
-import time
 from utility_based_agent import UtilityBasedAgent
-import random
-from random import randint
+from typing import List, Tuple
+from random import randint, shuffle
+import time
 
 
 def main():
@@ -69,13 +68,13 @@ def generate_random_cell_weights(grid_size):
     weights = [[1 for _ in range(grid_size)] for _ in range(grid_size)]
 
     total_cells = grid_size * grid_size
-    sandy_cells_count = random.randint(1, total_cells // 2)
-    rocky_cells_count = random.randint(1, total_cells // 2)
+    sandy_cells_count = randint(1, total_cells // 2)
+    rocky_cells_count = randint(1, total_cells // 2)
 
     all_positions = [
         (row, clmn) for row in range(grid_size) for clmn in range(grid_size)
     ]
-    random.shuffle(all_positions)
+    shuffle(all_positions)
 
     # Células arenosas (2)
     for row, clmn in all_positions[:sandy_cells_count]:

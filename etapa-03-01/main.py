@@ -1,5 +1,6 @@
-from typing import List, Tuple
 from simple_agent import SimpleAgent
+from typing import Tuple
+from random import randint
 import time
 
 

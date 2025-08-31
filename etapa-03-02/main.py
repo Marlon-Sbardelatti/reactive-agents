@@ -1,7 +1,7 @@
-from random import randint
-from typing import List, Tuple
-import time
 from goal_based_agent import GoalBasedAgent
+from typing import List, Tuple
+from random import randint
+import time
 
 
 def main():
