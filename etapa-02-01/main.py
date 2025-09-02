@@ -14,7 +14,7 @@ def main():
 
     grid = [[0 for _ in range(grid_size)] for _ in range(grid_size)]
    
-    agent = ModelBasedAgent(grid_size, generate_random_position(grid_size), obstacles)
+    agent = ModelBasedAgent(grid_size, generate_random_position(grid_size))
 
     while not agent.has_finished():
         agent.move()
