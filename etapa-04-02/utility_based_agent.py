@@ -47,8 +47,14 @@ class UtilityBasedAgent:
         for p, w in available_positions:
             if w < min[1]:
                 min = (p, w)
+            elif w == min[1]:
+                if (self.calculate_manhattan_distance(p) < self.calculate_manhattan_distance(min[0]) ):
+                    min = (p, w)
 
         return min[0]
+    
+    def calculate_manhattan_distance(self, position: Tuple) -> int: 
+        return abs(position[0] - self.target[0]) + abs(position[1] - self.target[1])
 
     def get_next_position(self) -> Tuple:
         # print(self.position, self.calculate_move(), self.directions[0])
