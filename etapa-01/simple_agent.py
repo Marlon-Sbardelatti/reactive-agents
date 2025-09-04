@@ -10,7 +10,7 @@ class SimpleAgent:
         self.goal_completed = False
 
     def move(self):
-        rotations_made = 0
+        # rotations_made = 0
 
         while self.will_collide():
             if self.verify_goal_completed():
@@ -18,10 +18,10 @@ class SimpleAgent:
                 break
 
             self.rotate()
-            rotations_made += 1
+            # rotations_made += 1
 
-        if rotations_made >= 4:
-            return
+        # if rotations_made >= 4:
+        #     return
 
         self.position = tuple(
             (a + b) for a, b in zip(self.position, self.calculate_move())
